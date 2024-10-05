@@ -71,7 +71,7 @@ class SecuritiesData:
         needExtendedHoursData = options.get('extended_hours', False)
         needPreviousClose = options.get('need_previous_close', True)
 
-        # Correct the list of strings for joining
+      # Correct the list of strings for joining
         joined_options = "&".join([
             f"symbol={symbol}",
             f"periodType={period_type}",
