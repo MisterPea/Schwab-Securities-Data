@@ -1,9 +1,12 @@
 from requests_oauthlib import OAuth2Session
+from dotenv import load_dotenv
 import os
 import time
 import webbrowser
 import json
 from requests.auth import HTTPBasicAuth
+
+load_dotenv() # pycharm requires this.
 
 class AccountMethods:
     def __init__(self):
@@ -17,6 +20,9 @@ class AccountMethods:
         self.token_url = "https://api.schwabapi.com/v1/oauth/token"
         self.flow = "authorizationCode"
         self.token = self.retrieve_local_token() or self.set_token()
+
+    def check_env_vars(self):
+        print("Checking environment variables...", self.secret_key, self.app_key)
 
     def set_token(self):
         """Method that furnishes a token to the class"""
@@ -91,3 +97,7 @@ class AccountMethods:
         else:
             # Token is still valid
             return self.token
+
+
+acct = AccountMethods()
+print(acct.check_env_vars())
