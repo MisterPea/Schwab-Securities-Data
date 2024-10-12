@@ -1,7 +1,5 @@
 import urllib
-
 from account_methods import AccountMethods
-from typing import TypedDict
 from urllib.parse import quote
 import json
 import requests
@@ -82,8 +80,10 @@ class SecuritiesData:
             print(f"Error fetching price history: {response.status_code}, {response.text}")
             return None
 
-    def get_movers(self, symbol: IndexSymbolType, sort_by: MoverSortType, freq: FrequencyType):
-        url = f"{self.data_url}/movers/&{urllib.parse.quote(symbol)}?sort={sort_by}&{urllib.parse.quote(freq)}"
+    def get_movers(self, symbol: IndexSymbolType, sort_by: MoverSortType, freq: MoversFreqType):
+        """This method should find the movers for the index symbol, but doesn't seem to work-This is a Schwab issue"""
+        url = f"{self.data_url}/movers/{urllib.parse.quote(symbol)}?sort={sort_by}&frequency={urllib.parse.quote(f"{freq}")}"
+        print("**",url)
         headers = self.create_header()
 
         response = requests.get(url, headers=headers)
@@ -118,5 +118,7 @@ options: PriceHistoryOptions = {
     "end_date": "2020-12-31",
 }
 
+
 spy_out = SecuritiesData().price_history("SPY", price_history_options=options)
+# movers_out = SecuritiesData().get_movers(symbol="EQUITY_ALL", sort_by="PERCENT_CHANGE_DOWN", freq=10)
 print(json.dumps(spy_out, indent=2))
