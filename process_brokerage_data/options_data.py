@@ -1,10 +1,7 @@
-import urllib
 from dataclasses import asdict
-from urllib.parse import quote
 from account_methods import AccountMethods
 import json
 import requests
-import datetime
 from option_data_types import OptionExpirationType, OptionChainRequest, OptionReturnType
 
 
@@ -27,7 +24,7 @@ class OptionData:
         print(json.dumps(json_data, indent=2))
 
     def get_expiration_chain(self, symbol: str) -> OptionExpirationType | None:
-        """Retrieves the expiration chain for the options of a given symbol."""
+        """Method to retrieve the expiration chain for the options of a given symbol."""
         url = f"{self.data_url}/expirationchain?symbol={symbol}"
         headers = self.create_header()
         response = requests.get(url, headers=headers)
@@ -38,6 +35,7 @@ class OptionData:
             return None
 
     def get_option_chain(self, chain_options: OptionChainRequest) -> OptionReturnType | None:
+        """Method to retrieve the option chain or spread for a given symbol."""
         headers = self.create_header()
         url_options = ""
         chain_options_dict = asdict(chain_options)

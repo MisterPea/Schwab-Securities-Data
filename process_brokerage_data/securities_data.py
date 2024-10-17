@@ -4,9 +4,8 @@ from urllib.parse import quote
 import json
 import requests
 import datetime
-from securities_data_types import (PriceHistoryOptions, FrequencyType, IndexSymbolType, MoverSortType, MoversFreqType,
+from securities_data_types import (PriceHistoryOptions, IndexSymbolType, MoverSortType, MoversFreqType,
                                    MarketTimeType)
-
 
 class SecuritiesData:
     def __init__(self):

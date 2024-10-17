@@ -48,12 +48,14 @@ class AccountMethods:
         self.save_token(token)
         return token
 
-    def save_token(self, token):
+    @staticmethod
+    def save_token(token):
         """Save token to file"""
         with open("token.json", "w") as f:
             json.dump(token, f)
 
-    def retrieve_local_token(self):
+    @staticmethod
+    def retrieve_local_token():
         """Attempt to load token from local file"""
         if os.path.exists("token.json"):
             with open("token.json", "r") as f:
@@ -69,12 +71,9 @@ class AccountMethods:
         """Refresh expired tokens using existing token"""
         oauth = OAuth2Session(self.app_key, token=self.token)
         auth = HTTPBasicAuth(self.app_key, self.secret_key)
-        # options = {"client_id": self.app_key, "client_secret": self.secret_key}
-
         # Attempt to refresh token
         try:
             new_token = oauth.refresh_token(self.token_url, auth=auth, refresh_token=self.token["refresh_token"])
-            # new_token = oauth.refresh_token(self.token_url, **options)
             new_token["expires_at"] = time.time() + new_token["expires_in"]
             self.token = new_token
             self.save_token(new_token)
