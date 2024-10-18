@@ -1,10 +1,9 @@
 import urllib
-from account_methods import AccountMethods
+from process_brokerage_data.account_methods import AccountMethods
 from urllib.parse import quote
-import json
 import requests
 import datetime
-from securities_data_types import (PriceHistoryOptions, IndexSymbolType, MoverSortType, MoversFreqType,
+from process_brokerage_data.securities_data_types import (PriceHistoryOptions, IndexSymbolType, MoverSortType, MoversFreqType,
                                    MarketTimeType)
 
 class SecuritiesData:
@@ -105,19 +104,19 @@ class SecuritiesData:
             print(f"Error fetching market hours: {response.status_code}, {response.text}")
 
 
-
-options: PriceHistoryOptions = {
-    'period_type': "year",
-    "period": 1,
-    "frequency_type": "daily",
-    "frequency": 1,
-    "extended_hours": False,
-    "need_previous_close": True,
-    "start_date": "2020-01-01",
-    "end_date": "2020-12-31",
-}
-
-
-spy_out = SecuritiesData().price_history("SPY", price_history_options=options)
-# movers_out = SecuritiesData().get_movers(symbol="EQUITY_ALL", sort_by="PERCENT_CHANGE_DOWN", freq=10)
-print(json.dumps(spy_out, indent=2))
+#
+# options: PriceHistoryOptions = {
+#     'period_type': "year",
+#     "period": 1,
+#     "frequency_type": "daily",
+#     "frequency": 1,
+#     "extended_hours": False,
+#     "need_previous_close": True,
+#     "start_date": "2020-01-01",
+#     "end_date": "2020-12-31",
+# }
+#
+#
+# spy_out = SecuritiesData().price_history("SPY", price_history_options=options)
+# # movers_out = SecuritiesData().get_movers(symbol="EQUITY_ALL", sort_by="PERCENT_CHANGE_DOWN", freq=10)
+# print(json.dumps(spy_out, indent=2))
