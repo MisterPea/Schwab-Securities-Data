@@ -1,4 +1,4 @@
-from typing import Literal, TypedDict
+from typing import Literal, TypedDict, NotRequired
 
 # Price History Types
 PeriodType = Literal['day', 'month', 'year', 'ytd']
@@ -17,14 +17,17 @@ Frequency = MinuteFrequency | OtherFrequency
 
 
 class PriceHistoryOptions(TypedDict):
-    period_type: PeriodType
-    period: Period
-    frequency_type: FrequencyType
+    # Required fields
+    frequencyType: FrequencyType
     frequency: Frequency
-    extended_hours: bool
-    need_previous_close: bool
-    start_date: str
-    end_date: str
+    extendedHours: bool
+    needPreviousClose: bool
+
+    # Optional fields/Either or
+    periodType: NotRequired[PeriodType]
+    period: NotRequired[Period]
+    startDate: NotRequired[str]
+    endDate: NotRequired[str]
 
 
 # Movers Types

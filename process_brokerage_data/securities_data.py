@@ -3,8 +3,11 @@ from process_brokerage_data.account_methods import AccountMethods
 from urllib.parse import quote
 import requests
 import datetime
-from process_brokerage_data.securities_data_types import (PriceHistoryOptions, IndexSymbolType, MoverSortType, MoversFreqType,
-                                   MarketTimeType)
+import json
+from process_brokerage_data.securities_data_types import (PriceHistoryOptions, IndexSymbolType, MoverSortType,
+                                                          MoversFreqType,
+                                                          MarketTimeType)
+
 
 class SecuritiesData:
     def __init__(self):
@@ -42,32 +45,46 @@ class SecuritiesData:
 
     def price_history(self, symbol: str, price_history_options: PriceHistoryOptions):
         """Method to retrieve the price history of a specific instrument"""
-        start_date = price_history_options.get('start_date', None)
-        end_date = price_history_options.get('end_date', None)
-        period_type = price_history_options.get('period_type', 'ytd')
-        period = price_history_options.get('period', 1)
-        frequency_type = price_history_options.get('frequency_type', 'daily')
-        frequency = price_history_options.get('frequency', 1)
-        need_extended_hours_data = price_history_options.get('extended_hours', False)
-        need_previous_close = price_history_options.get('need_previous_close', True)
+        # Required params
+        frequencyType = price_history_options.get('frequencyType')
+        frequency = price_history_options.get('frequency')
+        extendedHours = price_history_options.get('extendedHours')
+        needPreviousClose = price_history_options.get('needPreviousClose')
 
-        # Correct the list of strings for joining
-        joined_options = "&".join([
-            f"symbol={symbol}",
-            f"periodType={period_type}",
-            f"period={period}",
-            f"frequencyType={frequency_type}",
-            f"frequency={frequency}",
-            f"needExtendedHoursData={need_extended_hours_data}",
-            f"needPreviousClose={need_previous_close}"
-        ])
+        # Optional params
+        startDate = price_history_options.get('startDate')
+        endDate = price_history_options.get('endDate')
+        periodType = price_history_options.get('periodType')
+        period = price_history_options.get('period')
 
-        if start_date:
-            joined_options += f"&startDate={self.convert_to_ms_epoch(start_date)}"
-        if end_date:
-            joined_options += f"&endDate={self.convert_to_ms_epoch(end_date)}"
+        # Check if dates provided
+        date_params_provided = startDate is not None and endDate is not None
+
+        # Check if periods provided
+        period_params_provided = periodType is not None and period is not None
+
+        # Check that either periods or dates provided - not both
+        if period_params_provided == date_params_provided:
+            raise ValueError(
+                "You must provide either 'periodType' and 'period', "
+                "or 'startDate' and 'endDate', but not both."
+            )
+
+        # Check for required params
+        if symbol is None or frequencyType is None or frequency is None or extendedHours is None or needPreviousClose is None:
+            raise ValueError("You must provide a 'symbol', 'frequencyType', 'frequency', extendedHours, and needPreviousClose.")
+
+        symbol_list = [f"symbol={symbol}"]
+        options_list = [f"{k}={v}" for [k, v] in price_history_options.items() if k not in ('startDate', 'endDate')]
+        joined_options = "&".join(symbol_list + options_list)
+
+        if startDate:
+            joined_options += f"&startDate={self.convert_to_ms_epoch(startDate)}"
+        if endDate:
+            joined_options += f"&endDate={self.convert_to_ms_epoch(endDate)}"
 
         url = f"{self.data_url}/pricehistory?{joined_options}"
+        print(url)
         headers = self.create_header()
         response = requests.get(url, headers=headers)
 
@@ -81,7 +98,6 @@ class SecuritiesData:
     def get_movers(self, symbol: IndexSymbolType, sort_by: MoverSortType, freq: MoversFreqType):
         """This method should find the movers for the index symbol, but doesn't seem to work-This is a Schwab issue"""
         url = f"{self.data_url}/movers/{urllib.parse.quote(symbol)}?sort={sort_by}&frequency={urllib.parse.quote(f"{freq}")}"
-        print("**",url)
         headers = self.create_header()
 
         response = requests.get(url, headers=headers)
@@ -102,21 +118,3 @@ class SecuritiesData:
             return response.json()
         else:
             print(f"Error fetching market hours: {response.status_code}, {response.text}")
-
-
-#
-# options: PriceHistoryOptions = {
-#     'period_type': "year",
-#     "period": 1,
-#     "frequency_type": "daily",
-#     "frequency": 1,
-#     "extended_hours": False,
-#     "need_previous_close": True,
-#     "start_date": "2020-01-01",
-#     "end_date": "2020-12-31",
-# }
-#
-#
-# spy_out = SecuritiesData().price_history("SPY", price_history_options=options)
-# # movers_out = SecuritiesData().get_movers(symbol="EQUITY_ALL", sort_by="PERCENT_CHANGE_DOWN", freq=10)
-# print(json.dumps(spy_out, indent=2))
