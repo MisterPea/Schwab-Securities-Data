@@ -84,7 +84,6 @@ class SecuritiesData:
             joined_options += f"&endDate={self.convert_to_ms_epoch(endDate)}"
 
         url = f"{self.data_url}/pricehistory?{joined_options}"
-        print(url)
         headers = self.create_header()
         response = requests.get(url, headers=headers)
 
