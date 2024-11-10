@@ -12,7 +12,6 @@ class AccountMethods:
     def __init__(self):
         self.app_key = os.environ.get("APP_KEY")
         self.secret_key = os.environ.get("SECRET_KEY")
-        self.client_id = os.environ.get("CLIENT_ID")
         self.authorize_url = "https://api.schwabapi.com/v1/oauth/authorize"
         self.response_type = "code"
         self.scope = "api"
@@ -20,6 +19,10 @@ class AccountMethods:
         self.token_url = "https://api.schwabapi.com/v1/oauth/token"
         self.flow = "authorizationCode"
         self.token = self.retrieve_local_token() or self.set_token()
+
+    def _ensure_api_and_secret(self):
+        if not self.app_key or not self.secret_key:
+            raise Exception("Missing API_KEY! You must provide an app key and a secret key in a .env file")
 
     def check_env_vars(self):
         print("Checking environment variables...", self.secret_key, self.app_key)
@@ -96,7 +99,3 @@ class AccountMethods:
         else:
             # Token is still valid
             return self.token
-
-
-acct = AccountMethods()
-print(acct.check_env_vars())

@@ -72,7 +72,8 @@ class SecuritiesData:
 
         # Check for required params
         if symbol is None or frequencyType is None or frequency is None or extendedHours is None or needPreviousClose is None:
-            raise ValueError("You must provide a 'symbol', 'frequencyType', 'frequency', extendedHours, and needPreviousClose.")
+            raise ValueError(
+                "You must provide a 'symbol', 'frequencyType', 'frequency', extendedHours, and needPreviousClose.")
 
         symbol_list = [f"symbol={symbol}"]
         options_list = [f"{k}={v}" for [k, v] in price_history_options.items() if k not in ('startDate', 'endDate')]
@@ -117,3 +118,15 @@ class SecuritiesData:
             return response.json()
         else:
             print(f"Error fetching market hours: {response.status_code}, {response.text}")
+
+# sd = SecuritiesData()
+# options: PriceHistoryOptions = {
+#     "periodType": "day",
+#     "period": 1,
+#     "frequencyType": "minute",
+#     "frequency": 1,
+#     "extendedHours": False,
+#     "needPreviousClose": False,
+# }
+# data = sd.price_history("AAPL", options)
+# print(json.dumps(data, indent=4))
