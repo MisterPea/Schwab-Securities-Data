@@ -1,7 +1,9 @@
-## 📈 Schwab API intergations
+## 📈 Schwab API Integrations
 Contains Methods for:
 #### •  Account
-* Account connection (token aquisition and refresh)
+* Account connection (token acquisition and refresh)
+* Account method (user preferences) for streaming quotes
+
 #### •  Securities Data
 * Get multiple quotes
 * Get price history
@@ -11,3 +13,4 @@ Contains Methods for:
 #### •  Options Data
 * Get available option expirations
 * Get option chain data
+
