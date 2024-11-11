@@ -5,7 +5,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="process_brokerage_data",
-    version="0.0.3",
+    version="0.0.6",
     description="Schwab brokerage data",
     packages=['process_brokerage_data'],
     install_requires=requirements

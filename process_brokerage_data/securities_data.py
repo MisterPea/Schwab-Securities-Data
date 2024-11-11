@@ -64,10 +64,10 @@ class SecuritiesData:
         period_params_provided = periodType is not None and period is not None
 
         # Check that either periods or dates provided - not both
-        if period_params_provided == date_params_provided:
+        if period_params_provided == False or date_params_provided == False:
             raise ValueError(
                 "You must provide either 'periodType' and 'period', "
-                "or 'startDate' and 'endDate', but not both."
+                "or 'startDate' and 'endDate'"
             )
 
         # Check for required params
