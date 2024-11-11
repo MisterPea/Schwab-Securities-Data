@@ -31,6 +31,3 @@ class UserData:
         else:
             print(f"Error fetching user preferences: {response.status_code}")
             return None
-
-user_data = UserData()
-print(user_data.get_user_prefs())
